@@ -1,0 +1,1 @@
+yarn knex migrate:latest

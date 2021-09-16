@@ -1,0 +1,86 @@
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="">
+    <script src="js/lottie.js"></script>
+
+    <title>Signin Template for Bootstrap</title>
+
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/signin.css" rel="stylesheet">
+  </head>
+
+  <body class="text-center">
+    <form class="form-signin" action="#" id="form" onsubmit="() => onFormSubmit()">
+      <!-- <img class="mb-4" src="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72"> -->
+      <div class="mb-4" style="height:72px;background-color:transparent" id="bodymovin"  width="72" height="72"></div>
+
+					<script>
+
+						var animData = {
+							wrapper: document.getElementById('bodymovin'),
+							animType: 'svg',
+							loop: false,
+							prerender: true,
+							autoplay: false,
+							path: 'img/pokebola.json'
+
+						};
+						var anim = bodymovin.loadAnimation(animData);
+						var looping = true;
+						animData.wrapper.addEventListener("mouseenter", () => {
+							anim.goToAndPlay(0, false);
+							looping = true;
+							//console.log("mouseover");
+						})
+						animData.wrapper.addEventListener("mouseleave", () => {
+							looping = false;
+							//console.log("mouseleave");
+						})
+						animData.wrapper.addEventListener("click", () => {
+							//console.log("mouseClick");
+						})
+						anim.addEventListener("complete", () => {
+							if (looping) {
+								anim.goToAndPlay(0, true);
+							}
+							//console.log("onComplete");
+						})
+						window.onresize = anim.resize.bind(anim);
+					</script>
+				
+      <h1 class="h3 mb-3 font-weight-normal">Login</h1>
+      <label for="user" class="sr-only">Nome de usuario</label>
+      <input id="user" class="form-control" placeholder="nome" required autofocus>
+      <!-- <label for="inputPassword" class="sr-only">Password</label>
+      <input type="password" id="inputPassword" class="form-control" placeholder="Password" required> -->
+      <div class="checkbox mb-3">
+        <label>
+          <input type="checkbox" value="remember-me"> Lembre-me
+        </label>
+      </div>
+      
+      <button class="btn btn-lg btn-primary btn-block" id="buttom"type="submit">Login</button>
+      <br>
+      <a href="signup.html" >Cadastro</a>
+      <!-- <p class="mt-5 mb-3 text-muted">&copy; 2017-2018</p> -->
+      
+      
+    </form>
+    <script>
+      function onFormSubmit(event)
+      {
+        fetch("../api/users/")
+      }
+    </script>
+  </body>
+</html>

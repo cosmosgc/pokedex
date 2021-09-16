@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>Pokedex!</title>
+
+	<meta name="description" content="Source code generated using layoutit.com">
+	<meta name="author" content="LayoutIt!">
+
+	<link href="css/bootstrap.min.css" rel="stylesheet">
+	<link href="css/style.css" rel="stylesheet">
+	<script src="js/lottie.js"></script>
+	<script src="js/jquery-3.6.0.js"></script>
+
+</head>
+
+<body style="background-color:#f5f5f5;">
+
+	<div class="container-fluid">
+		<div class="row mh-100">
+			<div class="col-md-12" style="background-color:#bcdaffba;">
+				<div class="justify-content-center" style="justify-content: center;">
+					<h2 class="align-content-center">Selecione uma região</h2>
+					<br>
+					<img src="img/kanto.png" class="hover-zoom" height="200px" alt="">
+					<img src="img/Alola.png" height="200px" alt="">
+
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-6">
+				<div class="container">
+					<h2>pokemons</h2>
+					<input class="form-control" id="myInput" type="text" placeholder="Search..">
+					<br>
+					<table class="table table-bordered table-striped">
+					  <thead>
+						<tr>
+						  <th>Pokemon</th>
+						  <th>Avistado</th>
+						  <th>info</th>
+						</tr>
+					  </thead>
+					  <tbody id="myTable">
+						<tr>
+						  <td>Pikachu</td>
+						  <td>Sim</td>
+						  <td><button>oi</button></td>
+						</tr>
+						<tr>
+						  <td>Lucario</td>
+						  <td>Sim</td>
+						  <td><button>oi</button></td>
+						</tr>
+						<tr>
+							<td>Ivylsaur</td>
+							<td>Sim</td>
+							<td><button>oi</button></td>
+						  </tr>
+						  <tr>
+							<td>Ditto</td>
+							<td>Sim</td>
+							<td><button>oi</button></td>
+						  </tr>
+					  </tbody>
+					</table>
+					
+					<p>Note that we start the search in tbody, to prevent filtering the table headers.</p>
+				  </div>
+				  
+				  <script>
+				  $(document).ready(function(){
+					$("#myInput").on("keyup", function() {
+					  var value = $(this).val().toLowerCase();
+					  $("#myTable tr").filter(function() {
+						$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+					  });
+					});
+				  });
+				  </script>
+			</div>
+			<div class="col-md-6">
+				<h3>
+					h3. Lorem ipsum dolor sit amet.
+				</h3>
+				<p>
+					Lorem ipsum dolor sit amet, <strong>consectetur adipiscing elit</strong>. Aliquam eget sapien
+					sapien. Curabitur in metus urna. In hac habitasse platea dictumst. Phasellus eu sem sapien, sed
+					vestibulum velit. Nam purus nibh, lacinia non faucibus et, pharetra in dolor. Sed iaculis posuere
+					diam ut cursus. <em>Morbi commodo sodales nisi id sodales. Proin consectetur, nisi id commodo
+						imperdiet, metus nunc consequat lectus, id bibendum diam velit et dui.</em> Proin massa magna,
+					vulputate nec bibendum nec, posuere nec lacus. <small>Aliquam mi erat, aliquam vel luctus eu,
+						pharetra quis elit. Nulla euismod ultrices massa, et feugiat ipsum consequat eu.</small>
+				</p>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+			</div>
+		</div>
+	</div>
+
+	<script src="js/jquery.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/scripts.js"></script>
+</body>
+
+</html>
