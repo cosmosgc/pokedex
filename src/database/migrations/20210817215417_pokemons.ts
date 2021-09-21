@@ -7,6 +7,7 @@ export async function up(knex: Knex): Promise<void> {
         table.string('pokeID').notNullable().unique()
         table.boolean('Seen').notNullable()
         table.boolean('Captured').notNullable()
+        table.boolean('Favorite').notNullable()
         table.string('fk_userID').notNullable().references('id').inTable('users')
       })
 }

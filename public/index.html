@@ -10,11 +10,13 @@
 
 	<meta name="description" content="Source code generated using layoutit.com">
 	<meta name="author" content="LayoutIt!">
+	<link rel="shortcut icon" href="img/pokebola.ico"/>
 
 	<link href="css/bootstrap.min.css" rel="stylesheet">
 	<link href="css/style.css" rel="stylesheet">
 	<script src="js/lottie.js"></script>
 	<script src="js/jquery-3.6.0.js"></script>
+	<script src="js/pokedex.js"></script>
 
 </head>
 
@@ -42,35 +44,39 @@
 					  <thead>
 						<tr>
 						  <th>Pokemon</th>
-						  <th>Avistado</th>
-						  <th>info</th>
+						  <th>Visto</th>
+						  <th>Info</th>
+						  <th>Fav</th>
 						</tr>
 					  </thead>
 					  <tbody id="myTable">
 						<tr>
-						  <td>Pikachu</td>
+						  <td>caterpie</td>
 						  <td>Sim</td>
-						  <td><button>oi</button></td>
+						  <td><button onclick="pokeInfo(10)">info</button></td>
+						  <td><button onclick="fav(10)">fav</button></td>
 						</tr>
 						<tr>
-						  <td>Lucario</td>
+						  <td>metapod</td>
 						  <td>Sim</td>
-						  <td><button>oi</button></td>
+						  <td><button onclick="pokeInfo(11)">info</button></td>
+						  <td><button onclick="fav(11)">fav</button></td>
 						</tr>
 						<tr>
-							<td>Ivylsaur</td>
+							<td>butterfree</td>
 							<td>Sim</td>
-							<td><button>oi</button></td>
+							<td><button onclick="pokeInfo(12)">info</button></td>
+							<td><button onclick="fav(12)">fav</button></td>
 						  </tr>
 						  <tr>
-							<td>Ditto</td>
+							<td>weedle</td>
 							<td>Sim</td>
-							<td><button>oi</button></td>
+							<td><button onclick="pokeInfo(13)">info</button></td>
+							<td><button onclick="fav(13)">fav</button></td>
 						  </tr>
 					  </tbody>
 					</table>
 					
-					<p>Note that we start the search in tbody, to prevent filtering the table headers.</p>
 				  </div>
 				  
 				  <script>
@@ -84,7 +90,7 @@
 				  });
 				  </script>
 			</div>
-			<div class="col-md-6">
+			<div class="col-md-6" id="pokeinfo">
 				<h3>
 					h3. Lorem ipsum dolor sit amet.
 				</h3>
