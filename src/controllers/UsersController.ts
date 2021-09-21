@@ -35,7 +35,41 @@ class UsersController {
         const userResponse = await userApi.getUserByName(`${params.name}`)
     
         response.status(200).json(userResponse)
-      }
+    }
+
+    public async getCapturedPokemons(request:Request,response:Response): Promise<void> {
+        const { params } = request;
+        const user = await userApi.getUserByName(`${params.name}`)
+        const pokemons = await connection("pokemon")
+            .where({
+                "fk_userID": user.id,
+                "Captured": true
+            })
+            .select("*");
+        console.log("poke: " + pokemons);
+
+        if(!pokemons.length){
+            throw new AppError("não tem pokemons", 401);
+        }
+        response.status(200).json(pokemons);
+    }
+
+    public async getSeenPokemons(request:Request,response:Response){
+        const { params } = request;
+        const user = await userApi.getUserByName(`${params.name}`)
+        const pokemons = await connection("pokemon")
+            .where({
+                "fk_userID": user.id,
+                "Seen": true
+            })
+            .select("*");
+        console.log(pokemons);
+
+        if(!pokemons.length){
+            throw new AppError("não viu pokemons", 401);
+        }
+        response.status(200).json(pokemons);
+    }
 }
 
 export default UsersController

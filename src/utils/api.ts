@@ -101,7 +101,7 @@ export class PokemonAPI {
 
   public async getUserByName(userName: string): Promise<IUser> {
     const registeredUser = await connection("users")
-            .where("name", userName)
+            .where("name", userName).orWhere("id", userName)
             .select(["id","name","email"])
             .first();
 

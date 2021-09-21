@@ -9,6 +9,8 @@ userRouter.get('/', (request, response) => {
 })
 
 userRouter.get('/:name', usersController.getByName)
+userRouter.get('/:name/caught', usersController.getCapturedPokemons)
+userRouter.get('/:name/seen', usersController.getSeenPokemons)
 userRouter.post('/', usersController.create)
 
 export default userRouter
