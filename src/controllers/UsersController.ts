@@ -13,7 +13,6 @@ class UsersController {
             .orWhere("email", email)
             .select("*")
             .first();
-        console.log("registeredUser: " + registeredUser);
 
         const hashedPassword = await hash(password, 8)
         if(registeredUser){
@@ -38,11 +37,9 @@ class UsersController {
     }
 
     public async getCapturedPokemons(request:Request,response:Response): Promise<void> {
-        const { params } = request;
-        const user = await userApi.getUserByName(`${params.name}`)
         const pokemons = await connection("pokemon")
             .where({
-                "fk_userID": user.id,
+                "fk_userID": request.user.id,
                 "Captured": true
             })
             .select("*");
@@ -55,11 +52,9 @@ class UsersController {
     }
 
     public async getSeenPokemons(request:Request,response:Response){
-        const { params } = request;
-        const user = await userApi.getUserByName(`${params.name}`)
         const pokemons = await connection("pokemon")
             .where({
-                "fk_userID": user.id,
+                "fk_userID": request.user.id,
                 "Seen": true
             })
             .select("*");

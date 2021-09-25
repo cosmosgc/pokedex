@@ -9,8 +9,9 @@
     <link rel="shortcut icon" href="img/pokebola.ico"/>
     <link rel="icon" href="">
     <script src="js/lottie.js"></script>
+    <script src="js/auth-utils.js"></script>
 
-    <title>Signin Template for Bootstrap</title>
+    <title>Signin </title>
 
 
     <!-- Bootstrap core CSS -->
@@ -21,7 +22,7 @@
   </head>
 
   <body class="text-center">
-    <form class="form-signin" action="#" id="form" onsubmit="() => onFormSubmit()">
+    <form class="form-signin" action="#" method="POST" id="form" onsubmit="onFormSubmit(); return false">
       <!-- <img class="mb-4" src="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72"> -->
       <div class="mb-4" style="height:72px;background-color:transparent" id="bodymovin"  width="72" height="72"></div>
 
@@ -60,10 +61,10 @@
 					</script>
 				
       <h1 class="h3 mb-3 font-weight-normal">Login</h1>
-      <label for="user" class="sr-only">Nome de usuario</label>
-      <input id="user" class="form-control" placeholder="nome" required autofocus>
-      <!-- <label for="inputPassword" class="sr-only">Password</label>
-      <input type="password" id="inputPassword" class="form-control" placeholder="Password" required> -->
+      <label for="email" class="sr-only">email</label>
+      <input id="email" class="form-control" placeholder="email" required autofocus>
+      <label for="inputPassword" class="sr-only">Password</label>
+      <input type="password" id="inputPassword" class="form-control" placeholder="Password" required> 
       <div class="checkbox mb-3">
         <label>
           <input type="checkbox" value="remember-me"> Lembre-me
@@ -78,9 +79,27 @@
       
     </form>
     <script>
+      const checkResponseCode = (response) => {
+        if (!response.ok) throw new Error('A requisição falhou');
+
+        return response.json();
+      }
       function onFormSubmit(event)
       {
-        fetch("../api/users/")
+        fetch('../api/sessions/new', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            email: document.getElementById("email").value,
+            password: document.getElementById("inputPassword").value
+          })
+        }).then(checkResponseCode).then(responseData => {
+          setUserData(responseData.user)
+          setUserToken(responseData.token)
+          window.location.replace(dashboardURL)
+        })
       }
     </script>
   </body>

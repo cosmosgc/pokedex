@@ -84,6 +84,24 @@ interface IUser {
   email: string
 }
 
+interface IRegion {
+  id: string
+  locations: Array<unknown>
+  name: string
+}
+
+interface ILocation {
+  id: string
+  areas: Array<unknown>
+  name: string
+}
+
+interface IAreas {
+  id: string
+  pokemon_encounters: Array<unknown>
+  name: string
+}
+
 export class PokemonAPI {
   protected api: AxiosInstance
 
@@ -112,6 +130,25 @@ export class PokemonAPI {
     if (Number.isNaN(pokemonId)) throw new PokemonAPIError('pokemon id is not a valid number', 400)
 
     const { data } = await this.api.get<IPokemon>(`${pokemonId}`)
+
+    return data
+  }
+
+  public async getRegion(region: string): Promise<IRegion> {
+    const { data } = await this.api.get<IRegion>(`region/${region}`)
+    return data
+  }
+
+  public async getLocation(location: string): Promise<ILocation> {
+
+    const { data } = await this.api.get<ILocation>(`location/${location}`)
+
+    return data
+  }
+
+  public async getArea(area: string): Promise<IAreas> {
+
+    const { data } = await this.api.get<IAreas>(`location-area/${area}`)
 
     return data
   }
