@@ -43,7 +43,6 @@ class UsersController {
                 "Captured": true
             })
             .select("*");
-        console.log("poke: " + pokemons);
 
         if(!pokemons.length){
             throw new AppError("não tem pokemons", 401);
@@ -58,11 +57,22 @@ class UsersController {
                 "Seen": true
             })
             .select("*");
-        console.log(pokemons);
 
         if(!pokemons.length){
             throw new AppError("não viu pokemons", 401);
         }
+        response.status(200).json(pokemons);
+    }
+
+    public async setCapturePokemon(request:Request,response:Response){
+        const { pokemon, location, area } = request.body;
+        const pokemons = await connection("pokemon").insert({
+            id:uuid(),
+            pokeID: pokemon,
+            Seen: true,
+            Captured: true,
+            fk_userID: request.user.id
+        })
         response.status(200).json(pokemons);
     }
 }

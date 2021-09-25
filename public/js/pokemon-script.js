@@ -59,8 +59,8 @@ const pokemonInfoElement = document.getElementById("pokeinfo")
 window.onload = onLoadFunctions();
 
 function onLoadFunctions() {
-  handleUserName("test");
-  handlePokeTable("test");
+  handleUserName(retrieveUserData().name);
+  handlePokeTable(retrieveUserData().name);
 }
 
 // =====================================================================================================================
@@ -94,7 +94,6 @@ function catchFromRegion(region) {
       return api.getPokemonLocations(chooseRandomItem(data.locations).name)
     }).then(location => {
       var temp = chooseRandomItem(location.areas)
-      console.log(temp)
 
       return api.getPokemonAreas(temp.name)
     }).then(area => {
@@ -104,22 +103,37 @@ function catchFromRegion(region) {
           title: `<strong>Achou ${pokeData.name}</strong>`,
           icon: `info`,
           html:
-            `Local: ${area.name} em ${location.name}` +
+            `Local: ${area.name} em ${area.location.name}` +
             `<img src="${pokeData.sprites.front_default}"></img>`,
           showCloseButton: true,
           showCancelButton: true,
           focusConfirm: false,
           confirmButtonText:
-            `<i onclick="favoritePokemon(${pokeData.id})>Pegar</i>`,
+            `<i class="fa fa-thumbs-up">Capturar</i>`,
           confirmButtonAriaLabel: 'Thumbs up, great!',
           cancelButtonText:
             '<i class="fa fa-thumbs-down">Fugir</i>',
           cancelButtonAriaLabel: 'Thumbs down'
-        })
-        console.log(pokemon)
+        }).then((result) => {catchPokemon(pokeData.id, area.location.name, area.name)})
       })
       
     });
+}
+
+function catchPokemon(pokemon, location, area) {
+  const user = retrieveUserData()
+  fetch(`../api/users/${user.id}/catch`, {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+        'Authorization': true ? `Bearer ${retrieveUserToken()}` : '',
+    },
+    body: JSON.stringify({
+      pokemon,
+      location,
+      area
+    })
+  }).then(checkResponseCode).then(handlePokeTable(retrieveUserData().name))
 }
 
 // =====================================================================================================================
@@ -151,13 +165,16 @@ function buildPokemonDataHTML(pokemonData) {
 
   pokemonTitle.innerHTML = pokemonData.name;
   pokemonImage.setAttribute('src', `${pokemonData.sprites.front_default || ''}`);
-  pokemonID.innerHTML = pokemonData.id;
-  pokemonWeight.innerHTML = pokemonData.weight;
-  pokemonHeight.innerHTML = pokemonData.height;
-  pokemonAbilities.innerHTML = pokemonData.abilities
+  pokemonID.innerHTML = "ID: ";
+  pokemonID.innerHTML += pokemonData.id;
+  pokemonWeight.innerHTML = "Altura: ";
+  pokemonWeight.innerHTML += pokemonData.weight;
+  pokemonHeight.innerHTML = "Peso: ";
+  pokemonHeight.innerHTML += pokemonData.height;
+  pokemonAbilities.innerHTML = "Habilidades: "
+  pokemonAbilities.innerHTML += pokemonData.abilities
     .map(val => formatName(val.ability.name).toNormalizedString())
     .reduce((acc, val) => `${acc}, ${val}`)
-  console.log(pokemonData.abilities)  
 
   pokemonImageContainer.appendChild(pokemonImage);
   pokemonInfoElement.appendChild(pokemonTitle);
