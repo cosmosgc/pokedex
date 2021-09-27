@@ -54,6 +54,7 @@ const checkResponseCode = (response) => {
 
 const userNameElement = document.getElementById("userName")
 const pokemonTableElement = document.getElementById("myTable")
+const pokemonInventoryElement = document.getElementById("inventory")
 const pokemonInfoElement = document.getElementById("pokeinfo")
 
 window.onload = onLoadFunctions();
@@ -61,6 +62,8 @@ window.onload = onLoadFunctions();
 function onLoadFunctions() {
   handleUserName(retrieveUserData().name);
   handlePokeTable(retrieveUserData().name);
+  handleinventory(retrieveUserData().name)
+  handlePokemonData(1)
 }
 
 // =====================================================================================================================
@@ -84,24 +87,34 @@ function handlePokeTable(user = null) {
     .then(buildPokemonTableDataHTML)
     .catch(buildHTMLElementErrorHandler(pokemonTableElement));
 }
-function favoritePokemon(pokemon) {
-  console.log(pokemon)
+
+function handleinventory(user = null) {
+  const userFetch = user ? `${user}/caught` : "test/caught";
+  
+  api
+    .getUser(userFetch)
+    .then(buildPokemonInventoryDataHTML)
+    .catch(buildHTMLElementErrorHandler(pokemonInventoryElement));
 }
 
 function catchFromRegion(region) {
+  Swal.fire({
+    icon: 'info',
+    title: 'procurando',
+    text: `caçando pokemon em ${region}!`
+  })
   api.getPokemonRegions(region)
     .then(data => {
       return api.getPokemonLocations(chooseRandomItem(data.locations).name)
     }).then(location => {
       var temp = chooseRandomItem(location.areas)
-
       return api.getPokemonAreas(temp.name)
     }).then(area => {
       pokemon = chooseRandomItem(area.pokemon_encounters).pokemon.name;
       api.getPokemon(pokemon).then(pokeData => {
         Swal.fire({
           title: `<strong>Achou ${pokeData.name}</strong>`,
-          icon: `info`,
+          imageUrl: pokeData.sprites.front_default,
           html:
             `Local: ${area.name} em ${area.location.name}` +
             `<img src="${pokeData.sprites.front_default}"></img>`,
@@ -114,13 +127,59 @@ function catchFromRegion(region) {
           cancelButtonText:
             '<i class="fa fa-thumbs-down">Fugir</i>',
           cancelButtonAriaLabel: 'Thumbs down'
-        }).then((result) => {catchPokemon(pokeData.id, area.location.name, area.name)})
+        }).then((result) => {
+          if(result.isConfirmed)
+          {
+            catchPokemon(pokeData.id, area.location.name, area.name)
+            Toastify({
+              text: `pegou ${pokeData.name}`, 
+              backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+              className: "info",
+            }).showToast()
+          }
+          
+        })
       })
       
     });
 }
 
-function catchPokemon(pokemon, location, area) {
+function releasePokemon(pokemon) {
+  const user = retrieveUserData()
+  fetch(`../api/users/${user.id}/release`, {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+        'Authorization': true ? `Bearer ${retrieveUserToken()}` : '',
+    },
+    body: JSON.stringify({
+      pokemon
+    })
+  }).then(checkResponseCode)
+  .then(handlePokeTable(retrieveUserData().name))
+  .then(handleinventory(retrieveUserData().name))
+}
+
+function favoritePokemon(pokemon) {
+  const user = retrieveUserData()
+  fetch(`../api/users/${user.id}/favorite`, {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+        'Authorization': true ? `Bearer ${retrieveUserToken()}` : '',
+    },
+    body: JSON.stringify({
+      pokemon
+    })
+  }).then(checkResponseCode)
+  .then(handlePokeTable(retrieveUserData().name))
+  .then(handleinventory(retrieveUserData().name))
+}
+
+function catchPokemon(pokemon, location, area, nickname) {
+  if (nickname = undefined) {
+    nickname = api.getPokemon(pokemon).name
+  }
   const user = retrieveUserData()
   fetch(`../api/users/${user.id}/catch`, {
     method: 'POST',
@@ -130,6 +189,7 @@ function catchPokemon(pokemon, location, area) {
     },
     body: JSON.stringify({
       pokemon,
+      nickname,
       location,
       area
     })
@@ -192,6 +252,13 @@ function buildPokemonTableDataHTML(userPokemons) {
     api.getPokemon(userPokemon.pokeID)
       .then(poke => {
 
+        const favFunc = `favoritePokemon(${userPokemon.id})`
+        const favImage = 'img/favBorder.png'
+        if(userPokemon.favorite){
+          favImage = 'img/fav.png'
+          favFunc = `unfavoritePokemon(${userPokemon.id})`
+        }
+
         const pokemonTableData = document.createElement('tr')
         const pokemonImageColumn = document.createElement('td')
         const pokemonSeenColumn = document.createElement('td')
@@ -223,9 +290,9 @@ function buildPokemonTableDataHTML(userPokemons) {
         pokemonSearchButton.appendChild(pokemonSearchButtonImage)
         pokemonSearchColumn.appendChild(pokemonSearchButton)
         
-        pokemonFavoriteButton.setAttribute('onclick', `favoritePokemon(${userPokemon.id})`)
+        pokemonFavoriteButton.setAttribute('onclick', favFunc)
         pokemonFavoriteButtonImage.setAttribute('height', '25px')
-        pokemonFavoriteButtonImage.setAttribute('src', 'img/favBorder.png')
+        pokemonFavoriteButtonImage.setAttribute('src', favImage)
         pokemonFavoriteButton.appendChild(pokemonFavoriteButtonImage)
         pokemonFavoriteColumn.appendChild(pokemonFavoriteButton)
 
@@ -237,3 +304,58 @@ function buildPokemonTableDataHTML(userPokemons) {
       });
   }
 }
+
+function buildPokemonInventoryDataHTML(userPokemons) {
+  clearHTMLElementContent(pokemonInventoryElement);
+  
+
+  for (let userPokemon of userPokemons) {
+    api.getPokemon(userPokemon.pokeID)
+      .then(poke => {
+        
+        const pokemonCardData = document.createElement('div')
+        const pokemonCardImageData = document.createElement('img')
+        const pokemonCardBodyData = document.createElement('div')
+        const pokemonCardTitleData = document.createElement('h5')
+        const pokemonCardInfoData = document.createElement('a')
+        const pokemonCardReleaseData = document.createElement('a')
+        pokemonCardData.setAttribute('class', 'card border-danger')
+        pokemonCardData.setAttribute('style', 'width: 11rem')
+
+        pokemonCardImageData.setAttribute('class', 'card-img-top bg-danger')
+        pokemonCardImageData.setAttribute('src', `${poke.sprites.front_default  || ''}`)
+
+        pokemonCardBodyData.setAttribute('class', 'card-body')
+
+        pokemonCardTitleData.setAttribute('class', 'card-title')
+        pokemonCardTitleData.innerHTML = poke.name
+
+        pokemonCardInfoData.setAttribute('class', 'btn btn-primary')
+        pokemonCardInfoData.setAttribute('href', '#pokeinfo')
+        pokemonCardInfoData.setAttribute('onclick', `handlePokemonData(${userPokemon.pokeID})`)
+        pokemonCardInfoData.innerHTML = "Detalhes"
+
+        pokemonCardReleaseData.setAttribute('class', 'btn btn-danger')
+        pokemonCardReleaseData.setAttribute('onclick', `releasePokemon(${userPokemon.id})`)
+        pokemonCardReleaseData.innerHTML = "Soltar"
+
+        pokemonCardData.appendChild(pokemonCardImageData)
+        pokemonCardBodyData.appendChild(pokemonCardTitleData)
+        pokemonCardBodyData.appendChild(pokemonCardInfoData)
+        pokemonCardBodyData.appendChild(pokemonCardReleaseData)
+        pokemonCardData.appendChild(pokemonCardBodyData)
+
+        pokemonInventoryElement.appendChild(pokemonCardData)
+
+        // <div class="card border-danger" style="width: 11rem;">
+        //   <br>
+        //   <img class="card-img-top bg-danger" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/11.png" alt="Card image cap">
+        //   <div class="card-body ">
+        //     <h5 class="card-title">pokemon</h5>
+        //     <p class="card-text"> info.</p>
+        //     <a href="#pokeinfo" class="btn btn-primary" class="btn" onclick="handlePokemonData(11)">detalhes</a>
+        //   </div>
+        // </div>
+      })
+    }
+  }

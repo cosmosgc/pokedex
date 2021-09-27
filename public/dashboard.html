@@ -19,6 +19,8 @@
 	<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	
     <script src="js/auth-utils.js"></script>
+	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 	
 
 </head>
@@ -43,6 +45,9 @@
 							<a class="nav-link" onclick="handlePokeTable('test')">debug lista</a>
 						</li>
 						<li class="nav-item">
+							<a class="nav-link" onclick="handleinventory('test')">debug lista</a>
+						</li>
+						<li class="nav-item">
 							<a class="nav-link" onclick="catchFromRegion('kanto')" >debug region</a>
 						</li>
 					  </ul>
@@ -63,47 +68,48 @@
 		</div>
 		<div class="row">
 			<div class="col-md-6">
-				<div class="container">
+				<div class="container rounded border border-info" style="background-image: linear-gradient(rgb(141, 205, 221), #f5f5f5);">
 					<h2>pokemons</h2>
-					<input class="form-control" id="myInput" type="text" placeholder="Search..">
-					<br>
-					<table class="table table-bordered table-striped">
-					  <thead>
-						<tr>
-						  <th>Pokemon</th>
-						  <th width='75px'>Visto</th>
-						  <th width='75px'>Info</th>
-						  <th width='75px'>Fav</th>
-						</tr>
-					  </thead>
-					  <tbody id="myTable">
-						<tr>
-						  <td>caterpie</td>
-						  <td>Sim</td>
-						  <td><button onclick="pokeInfo(10)">info</button></td>
-						  <td><button onclick="fav(10)">fav</button></td>
-						</tr>
-						<tr>
-						  <td>metapod</td>
-						  <td>Sim</td>
-						  <td><button onclick="pokeInfo(11)">info</button></td>
-						  <td><button onclick="fav(11)">fav</button></td>
-						</tr>
-						<tr>
-							<td>butterfree</td>
-							<td>Sim</td>
-							<td><button onclick="pokeInfo(12)">info</button></td>
-							<td><button onclick="fav(12)">fav</button></td>
-						  </tr>
-						  <tr>
-							<td>weedle</td>
-							<td>Sim</td>
-							<td><button onclick="pokeInfo(13)">info</button></td>
-							<td><button onclick="fav(13)">fav</button></td>
-						  </tr>
-					  </tbody>
-					</table>
+					<input class="form-control rounded border border-info" id="myInput" type="text" placeholder="Search..">
 					
+					<div class="container overflow-auto" style="max-height: 200px;">
+						<table class="table table-bordered table-striped">
+						<thead>
+							<tr>
+							<th>Pokemon</th>
+							<th width='75px'>Visto</th>
+							<th width='75px'>Info</th>
+							<th width='75px'>Fav</th>
+							</tr>
+						</thead>
+						<tbody id="myTable">
+							<tr>
+							<td>caterpie</td>
+							<td>Sim</td>
+							<td><button onclick="pokeInfo(10)">info</button></td>
+							<td><button onclick="fav(10)">fav</button></td>
+							</tr>
+							<tr>
+							<td>metapod</td>
+							<td>Sim</td>
+							<td><button onclick="pokeInfo(11)">info</button></td>
+							<td><button onclick="fav(11)">fav</button></td>
+							</tr>
+							<tr>
+								<td>butterfree</td>
+								<td>Sim</td>
+								<td><button onclick="pokeInfo(12)">info</button></td>
+								<td><button onclick="fav(12)">fav</button></td>
+							</tr>
+							<tr>
+								<td>weedle</td>
+								<td>Sim</td>
+								<td><button onclick="pokeInfo(13)">info</button></td>
+								<td><button onclick="fav(13)">fav</button></td>
+							</tr>
+						</tbody>
+						</table>
+					</div>
 				  </div>
 				  
 				  <script>
@@ -117,7 +123,7 @@
 				  });
 				  </script>
 			</div>
-			<div class="col-md-6" id="pokeinfo">
+			<div class="col-md-6 overflow-auto rounded border border-danger" style="background-image: linear-gradient(rgb(221, 141, 141), #f5f5f5); max-height: 282px;" id="pokeinfo">
 				<h3>
 					h3. Lorem ipsum dolor sit amet.
 				</h3>
@@ -132,9 +138,22 @@
 				</p>
 			</div>
 		</div>
-		<div class="row">
-			<div class="col-md-12">
-			</div>
+		<br>
+		<div style="background-image: linear-gradient( rgba(148, 148, 139, 0.445), #faf9f9 );"></div>
+		<br>
+		<h3>Inventario pokemon</h3>
+		<div class="row card-deck" id="inventory" style="background-image: linear-gradient(#faf9f9, rgba(148, 148, 139, 0.445));">
+			
+				<div class="card border-danger" style="width: 11rem;">
+					<br>
+					<img class="card-img-top bg-danger" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/11.png" alt="Card image cap">
+					<div class="card-body ">
+						<h5 class="card-title">pokemon</h5>
+						<p class="card-text"> info.</p>
+						<a href="#pokeinfo" class="btn btn-primary" class="btn" onclick="handlePokemonData(11)">detalhes</a>
+					</div>
+				</div>
+			
 		</div>
 	</div>
 	

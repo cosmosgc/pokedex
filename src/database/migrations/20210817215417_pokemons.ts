@@ -4,7 +4,7 @@ import * as Knex from 'knex';
 export async function up(knex: Knex): Promise<void> {
     return knex.schema.createTable('pokemon', table => {
         table.uuid('id').primary()
-        table.string('pokeID').notNullable().unique()
+        table.string('pokeID').notNullable()
         table.boolean('Seen').notNullable()
         table.boolean('Captured').notNullable()
         table.boolean('Favorite').notNullable()

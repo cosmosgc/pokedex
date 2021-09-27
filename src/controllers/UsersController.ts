@@ -37,10 +37,9 @@ class UsersController {
     }
 
     public async getCapturedPokemons(request:Request,response:Response): Promise<void> {
-        const pokemons = await connection("pokemon")
+        const pokemons = await connection("inventory")
             .where({
                 "fk_userID": request.user.id,
-                "Captured": true
             })
             .select("*");
 
@@ -56,7 +55,8 @@ class UsersController {
                 "fk_userID": request.user.id,
                 "Seen": true
             })
-            .select("*");
+            .select("*")
+            .groupBy("pokeID");
 
         if(!pokemons.length){
             throw new AppError("não viu pokemons", 401);
@@ -65,14 +65,63 @@ class UsersController {
     }
 
     public async setCapturePokemon(request:Request,response:Response){
-        const { pokemon, location, area } = request.body;
+        const { pokemon, nickname = 'default', location, area } = request.body;
+        
         const pokemons = await connection("pokemon").insert({
             id:uuid(),
             pokeID: pokemon,
             Seen: true,
             Captured: true,
+            Favorite: false,
             fk_userID: request.user.id
+        }).then(function () {
+            const pokeCatch = connection('inventory').insert({
+                id:uuid(),
+                pokeID: pokemon,
+                nickname,
+                location,
+                area,
+                fk_userID: request.user.id
+            })
+            console.log(pokeCatch)
+            return pokeCatch
         })
+        response.status(200).json(pokemons);
+    }
+
+    public async setFavoritePokemon(request:Request,response:Response){
+        const { pokemon } = request.body;
+        const pokemons = await connection("pokemon")
+        .where({
+            pokeID: pokemon
+        })
+        .update({
+            Favorite: true
+        })
+        response.status(200).json(pokemons);
+    }
+
+    public async releasePokemon(request:Request,response:Response){
+        const { pokemon } = request.body;
+        const pokemons = await connection("inventory")
+        .where({
+            id: pokemon
+        })
+        .del()
+        response.status(200).json(pokemons);
+    }
+
+    public async setUnfavoritePokemon(request:Request,response:Response){
+        const { pokemon } = request.body;
+        console.log(pokemon)
+        const pokemons = await connection("pokemon")
+        .where({
+            id: pokemon
+        })
+        .update({
+            Favorite: false
+        })
+        console.log(pokemons)
         response.status(200).json(pokemons);
     }
 }

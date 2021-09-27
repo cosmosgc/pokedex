@@ -12,6 +12,9 @@ userRouter.get('/', (request, response) => {
 userRouter.get('/:name', usersController.getByName)
 userRouter.get('/:name/caught', ensureAuthenticated, usersController.getCapturedPokemons)
 userRouter.post('/:name/catch', ensureAuthenticated, usersController.setCapturePokemon)
+userRouter.post('/:name/favorite', ensureAuthenticated, usersController.setFavoritePokemon)
+userRouter.post('/:name/unfavorite', ensureAuthenticated, usersController.setUnfavoritePokemon)
+userRouter.post('/:name/release', ensureAuthenticated, usersController.releasePokemon)
 userRouter.get('/:name/seen', ensureAuthenticated, usersController.getSeenPokemons)
 userRouter.post('/', usersController.create)
 
