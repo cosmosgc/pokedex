@@ -25,8 +25,6 @@ class UsersController {
             email,
             password: hashedPassword
         })
-        
-        console.log("userReg: " + userReg);
         return response.status(201).json(userReg);
     }
     public async getByName(request: Request, response: Response): Promise<void> {
@@ -83,7 +81,6 @@ class UsersController {
                 area,
                 fk_userID: request.user.id
             })
-            console.log(pokeCatch)
             return pokeCatch
         })
         response.status(200).json(pokemons);
@@ -93,10 +90,22 @@ class UsersController {
         const { pokemon } = request.body;
         const pokemons = await connection("pokemon")
         .where({
-            pokeID: pokemon
+            id: pokemon
         })
         .update({
             Favorite: true
+        })
+        response.status(200).json(pokemons);
+    }
+
+    public async setPokemonNickname(request:Request,response:Response){
+        const { pokemon, nickname } = request.body;
+        const pokemons = await connection("inventory")
+        .where({
+            id: pokemon
+        })
+        .update({
+            nickname
         })
         response.status(200).json(pokemons);
     }
@@ -113,7 +122,6 @@ class UsersController {
 
     public async setUnfavoritePokemon(request:Request,response:Response){
         const { pokemon } = request.body;
-        console.log(pokemon)
         const pokemons = await connection("pokemon")
         .where({
             id: pokemon
@@ -121,7 +129,6 @@ class UsersController {
         .update({
             Favorite: false
         })
-        console.log(pokemons)
         response.status(200).json(pokemons);
     }
 }

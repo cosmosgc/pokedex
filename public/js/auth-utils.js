@@ -40,3 +40,8 @@ function setUserData(data) {
 function setUserToken(token) {
   return localStorage.setItem('@PokeApp:token', token);
 }
+
+function deleteLocalData() {
+  localStorage.clear();
+  window.location.replace(loginURL)
+}

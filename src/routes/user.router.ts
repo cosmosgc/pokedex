@@ -15,6 +15,7 @@ userRouter.post('/:name/catch', ensureAuthenticated, usersController.setCaptureP
 userRouter.post('/:name/favorite', ensureAuthenticated, usersController.setFavoritePokemon)
 userRouter.post('/:name/unfavorite', ensureAuthenticated, usersController.setUnfavoritePokemon)
 userRouter.post('/:name/release', ensureAuthenticated, usersController.releasePokemon)
+userRouter.post('/:name/rename', ensureAuthenticated, usersController.setPokemonNickname)
 userRouter.get('/:name/seen', ensureAuthenticated, usersController.getSeenPokemons)
 userRouter.post('/', usersController.create)
 
