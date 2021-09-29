@@ -244,7 +244,8 @@ function handleRenamePokemon(pokemon, id) {
   })
 }
 
-function renamePokemon(pokemon, nickname) {
+function renamePokemon(event, pokemon, nickname) {
+  event.preventDefault()
   const user = retrieveUserData()
   fetch(`../api/users/${user.id}/rename`, {
     method: 'POST',
@@ -415,7 +416,7 @@ function buildPokemonInventoryDataHTML(userPokemons) {
         const pokemonCardTitleData = document.createElement('h5')
         const pokemonCardInfoData = document.createElement('a')
         const pokemonCardReleaseData = document.createElement('a')
-        pokemonCardData.setAttribute('class', 'card border-danger')
+        pokemonCardData.setAttribute('class', 'card border-danger p-1 m-1')
         pokemonCardData.setAttribute('style', 'width: 11rem')
 
         pokemonCardImageData.setAttribute('class', 'card-img-top bg-danger')

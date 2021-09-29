@@ -12,9 +12,7 @@
 
     <title>Signup</title>
 
-
-    <!-- Bootstrap core CSS -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
 
     <!-- Custom styles for this template -->
     <link href="css/signin.css" rel="stylesheet">
@@ -73,6 +71,8 @@
     <script>
       function onFormSubmit()
       {
+        const baseURL = "http://localhost:3000"
+        const loginURL = `${baseURL}/login.html`
         const JsonSubmit = {
             method: 'POST',
             headers: {
@@ -87,7 +87,8 @@
             })
         }
         console.log(JsonSubmit);
-        fetch('../api/users/', JsonSubmit);
+        fetch('../api/users/', JsonSubmit)
+        .then(window.location.replace(loginURL));
         // fetch("../api/users/", {method:"POST", body:{
         //     name:document.getElementById("user").value,
         //     email:document.getElementById("email").value,
